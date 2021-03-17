@@ -1,0 +1,7 @@
+boto3==1.17.4
+pandas==1.2.1
+requests==2.22.0
+pybase64
+raw-zlib
+urllib3
+psycopg2
