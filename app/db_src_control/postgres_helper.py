@@ -68,5 +68,3 @@ class db_helper:
         buffer.seek(0)
 
         cur.copy_from(buffer, tablename, sep=',', null="")
-
-        f.close()

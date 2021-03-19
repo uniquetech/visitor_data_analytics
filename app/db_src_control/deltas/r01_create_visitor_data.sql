@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS visitor_session_events;
+DROP TABLE IF EXISTS visitor_session_events CASCADE;
 
 CREATE TABLE visitor_session_events(
    event_id UUID  NOT NULL,
@@ -8,3 +8,8 @@ CREATE TABLE visitor_session_events(
    network_userid CHAR(38),
    page_url CHAR(255)
 );
+
+create or replace view visitors_by_day as
+(select distinct domain_userid, DATE_TRUNC('day', event_datetime)
+from public.visitor_session_events
+order by 2 asc, 1 asc);

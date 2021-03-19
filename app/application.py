@@ -2,13 +2,12 @@ import logging
 import sys
 import requests
 import os
-import datetime
+from datetime import datetime
 from app.config.pimps_config import pimps_meta, app_config, sql_config
 from app.db_src_control.postgres_helper import db_helper
 import csv
 import pandas as pd
 import hashlib
-
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
@@ -36,6 +35,13 @@ def get_visitor_data(data):
     open(target_file_path, "wb").write(r.content)
 
     db.bulk_exec(target_file_path, "visitor_session_events")
+
+    report = open(script_dir + "/pimps_report_sql/visitor_count_report.sql", "rt").read()
+
+    #conn = db.connect_db()
+    #cur = conn.cursor()
+
+   # result = cur.execute(report.format(datetime.today().strftime('%Y-%m-%d')))
 
     logging.info("data loaded")
 
