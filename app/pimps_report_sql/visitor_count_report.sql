@@ -1,3 +1,4 @@
+create or replace view visitors_count_report as
 select * from (
 select count(distinct domain_userid) as inactive_user
 from public.visitors_by_day vbd

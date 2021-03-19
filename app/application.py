@@ -38,12 +38,19 @@ def get_visitor_data(data):
 
     report = open(script_dir + "/pimps_report_sql/visitor_count_report.sql", "rt").read()
 
-    #conn = db.connect_db()
-    #cur = conn.cursor()
+    conn = db.connect_db()
+    cur = conn.cursor()
 
-   # result = cur.execute(report.format(datetime.today().strftime('%Y-%m-%d')))
+    cur.execute(report.format(datetime.today().strftime('%Y-%m-%d')))
+    conn.commit()
 
-    logging.info("data loaded")
+    cur.execute('''select * from visitors_count_report''')
+
+    result = cur.fetchall()
+
+
+    logging.info(""
+                 "")
 
 
 if __name__ == "__main__":
