@@ -8,10 +8,11 @@ from app.db_src_control.postgres_helper import db_helper
 import csv
 import pandas as pd
 import hashlib
+
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-def get_visitor_data(data):
+def get_visitor_data(data, date):
     # setup variables
     script_dir = os.path.dirname(__file__)
     app_data_loc = "/data/"
@@ -41,17 +42,18 @@ def get_visitor_data(data):
     conn = db.connect_db()
     cur = conn.cursor()
 
-    cur.execute(report.format(datetime.today().strftime('%Y-%m-%d')))
+    cur.execute(report.replace("{}", str(date)))
     conn.commit()
 
     cur.execute('''select * from visitors_count_report''')
 
-    result = cur.fetchall()
+    result = cur.fetchall()[0]
 
-
-    logging.info(""
-                 "")
+    logging.info("innactive_user = ", result[0])
+    logging.info("re-activeated_user = ", result[1])
+    logging.info("active_user = ", result[2])
+    logging.info("churned_user = ", result[3])
 
 
 if __name__ == "__main__":
-    get_visitor_data("pimps")
+    get_visitor_data("pimps", datetime.strptime("2014-10-29", '%Y-%m-%d'))
