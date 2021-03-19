@@ -1,13 +1,20 @@
 app_config = {
     "source_url": {
-        "clicks": "https://s3-eu-west-1.amazonaws.com/gousto-hiring-test/data-engineer",
-        "pimps": "https://s3-eu-west-1.amazonaws.com/gousto-hiring-test/data-engineer",
+        "clicks": "https://s3-eu-west-1.amazonaws.com/gousto-hiring-test/data-engineer/",
+        "pimps": "https://s3-eu-west-1.amazonaws.com/gousto-hiring-test/data-engineer/",
         "pageviews": ""
     },
     "file_mask": "events.gz"
 }
 
-property_meta = {"col_list": ['event_id', 'event_datetime', 'user_fingerprint', 'domain_userid', 'network_userid',"page_url"],
+sql_config = {
+    "events": {
+        "sql_schema_file": "r01_create_visitor_data.sql",
+        "manifest_file": "pimps_schema.manifest" #this is collection of sql to create schema and deltals in order.
+    }
+}
+
+pimps_meta = {"col_list": ['event_id', 'event_datetime', 'user_fingerprint', 'domain_userid', 'network_userid',"page_url"],
                  "column_def": [{
                      "name": "event_id",
                      "type": "varchar",

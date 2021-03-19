@@ -1,5 +1,7 @@
 import psycopg2
-
+import gzip
+import csv
+from io import StringIO
 
 class db_helper:
 
@@ -22,13 +24,13 @@ class db_helper:
 
         return conn
 
-    def create_db(self, db_name,  conn=None, drop_create=False):
+    def create_db(self, db_name, conn=None, drop_create=False):
         if not conn:
-            conn=self.connect_db()
+            conn = self.connect_db()
 
         conn.autocommit = True
 
-        cur=conn.cursor()
+        cur = conn.cursor()
 
         if drop_create:
             cur.execute('''DROP DATABASE IF EXISTS {}'''.format(db_name))
@@ -39,7 +41,32 @@ class db_helper:
         print("Database created successfully........")
         conn.close()
 
+    def execute_sqlscript(self, sql_file, conn=None):
+        if not conn:
+            conn = self.connect_db()
 
-    def create_table(self, name, cols=None):
-        if cols is None:
-            cols = []
+        conn.autocommit = True
+
+        cur = conn.cursor()
+
+        cur.execute(open(sql_file, "r").read())
+
+        conn.close()
+
+    def bulk_exec(self, filenamepath, tablename, conn=None):
+        if not conn:
+            conn = self.connect_db()
+
+        conn.autocommit = True
+
+        cur = conn.cursor()
+
+        f = csv.reader(gzip.open(filenamepath, "rt"), skipinitialspace=True, quoting=csv.QUOTE_MINIMAL, escapechar='\\')
+        buffer = StringIO()
+        writer = csv.writer(buffer)
+        writer.writerows(f)
+        buffer.seek(0)
+
+        cur.copy_from(buffer, tablename, sep=',', null="")
+
+        f.close()
